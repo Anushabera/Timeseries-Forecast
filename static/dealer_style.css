@@ -1,0 +1,297 @@
+/* ✅ Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    height: 80px;
+    z-index: 1000;
+}
+
+/* ✅ Centering the Logo */
+.nav-logo {
+    max-height: 50px;
+    position: absolute;
+    left: 48.5%;
+    transform: translateX(-50%);
+}
+/* Background Image as Fullscreen Watermark */
+body::before {
+    content: "";
+    position: fixed;
+    top: 100px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 100px); /* Adjust height dynamically */
+    background-image: url('watermark url'); /* Replace with your actual image */
+    background-size: cover;  
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.5;  
+    z-index: -1;
+}
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+    text-align: center;
+    margin: 0;
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;  /* Centers all elements horizontally */
+    justify-content: center;  /* Centers all elements vertically */
+    min-height: 100vh;  /* Ensures full height */
+}
+/* Logo Styling */
+.logo-image {
+    display: block;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    max-width: 200px;
+}
+
+/* Form Styling */
+.dealer-form {
+    width: 50%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+/* ✅ Actual Sales Column Styles */
+th.year-column {
+    background-color: #96B0B6;
+    color: black;
+    font-weight: bold;
+}
+
+th.variation-column {
+    background-color: #678C96;
+    color: white;
+    font-weight: bold;
+}
+
+/* ✅ Predicted Sales Column Styles */
+th.predicted-year {
+    background-color: #7B9AB8;
+    color: black;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+th.predicted-variation {
+    background-color: #476896;
+    color: white;
+    font-weight: bold;
+}
+
+/* ✅ Month Column Styling (First Column) */
+th.month-column {
+    background-color: #2D606F;  /* Green header for Month */
+    color: white;
+    font-weight: bold;
+}
+
+td:first-child {
+    background-color: #C3D2D6;  /* Light green background */
+    font-weight: bold;
+    color: #2D606F;
+}
+
+/* Table & Container Styling */
+.table-container {
+    margin: 30px auto;
+    width: 80%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+    text-align: center;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background-color: #2D606F;
+    color: white;
+    padding: 10px;
+}
+
+td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+.accuracy-box {
+    background: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.accuracy-box h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #2D606F;
+}
+
+.accuracy-box p {
+    margin: 5px 0 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #202A44;
+}
+.dashboard {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.left {
+    flex: 2;
+    margin-left: 2rem;
+}
+
+.right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-right: 2rem;
+}
+
+.forecast-full {
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.forecast-item {
+    background: #ffffff;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    flex: 1;
+}
+
+.bottom-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.forecast-image,
+.forecast-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+/* The Modal (background) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+}
+
+/* Modal Image */
+.modal-content {
+    margin: 100px auto 20px auto;  /* Push down from top to avoid navbar */
+    display: block;
+    max-width: 90%;
+    max-height: 70vh;
+}
+
+/* Caption */
+#caption {
+    margin: auto;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
+}
+
+/* Close Button */
+.close {
+    position: absolute;
+    top: 30px;
+    right: 50px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.card-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* This helps on smaller screens */
+    justify-content: center;
+    border-radius: 8px;
+}
+.card{
+    background-color: white;
+    border-radius: 8px;
+}
+.latest-year-box {
+    background-color: #f2f2f2;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 110px;
+    margin-bottom: 110px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    display: inline-block;
+}
+.nav-left {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #072c54;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+.form-container {
+    width: 20%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 20px auto; /* Center the form */
+    font-size: 16px;
+}
+#dealer {
+    font-size: 16px;
+    padding: 8px;
+    border: 2px solid #007BFF; /* Blue border */
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-left: 50px;
+}

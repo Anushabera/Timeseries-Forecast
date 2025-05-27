@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dealer Performance</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='dealer_style.css') }}">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery for AJAX -->
+</head>
+<body>
+    <h2>Dealer Forecasting</h2>
+
+    <div class="navbar">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="nav-logo" alt="Logo"> <!-- Centered Logo -->
+    </div>
+
+    <!-- Dealer selection form -->
+    <div class="form-container">
+        <form id="dealer-form" method="get" action="/dealer">
+            <label for="dealer">Choose a dealer:</label>
+            <select name="dealer" id="dealer" onchange="this.form.submit()">
+                <option value="Dealer_1" {% if selected_dealer == 'Dealer_1' %}selected{% endif %}>Pollutech</option>
+                <option value="Dealer_2" {% if selected_dealer == 'Dealer_2' %}selected{% endif %}>Infra Equip</option>
+                <option value="Dealer_3" {% if selected_dealer == 'Dealer_3' %}selected{% endif %}>SVP Mining</option>
+                <option value="Dealer_4" {% if selected_dealer == 'Dealer_4' %}selected{% endif %}>Ramanand Power</option>
+                <option value="Dealer_5" {% if selected_dealer == 'Dealer_5' %}selected{% endif %}>TIME</option>
+                <option value="Dealer_6" {% if selected_dealer == 'Dealer_6' %}selected{% endif %}>Suchita Millenium</option>
+            </select>
+        </form>
+    </div>
+    {% if overall_accuracy is defined %}
+        <div class="accuracy-box">
+            <h3>Accuracy for 2024 – {{ selected_dealer }}</h3>
+            <p><b>{{ overall_accuracy | round(2) }}%</b></p>
+        </div>
+    {% endif %}
+    <!-- Container to display the plot -->
+    <!-- Dashboard Layout for Graphs -->
+    <div class="dashboard">
+        <!-- Left Side: Full Forecast Plot -->
+        <div class="left">
+            {% if forecast_path %}
+                <div class="forecast-full">
+                    <h3>12-Month Forecast – {{ selected_dealer }}</h3>
+                    <img src="{{ forecast_path }}" alt="Forecast Plot" class="modal-enabled full-width" class="modal-enabled">
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Side: Smaller Cards -->
+        <div class="right">
+            {% if plot_image %}
+                <div class="forecast-item">
+                    <h3>Trend and Seasonality of {{ selected_dealer }}</h3>
+                    <img src="{{ plot_image }}" alt="Trend and Seasonality Plot" class="modal-enabled">
+                </div>
+            {% endif %}
+            <div class="bottom-row">
+                {% if yoy_growth_plot %}
+                    <div class="forecast-item">
+                        <h3>Growth of – {{ selected_dealer }}</h3>
+                        <img src="{{ yoy_growth_plot }}" alt="YoY Growth Plot" class="modal-enabled">
+                    </div>
+                {% endif %}
+                {% if monthly_avg_sales_plot %}
+                    <div class="forecast-item">
+                        <h3>Average Monthly Sales of - {{ selected_dealer }}</h3>
+                        <img src="{{ monthly_avg_sales_plot }}" alt="Monthly Average Sales Plot" class="modal-enabled">
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <h2>Sales Table for {{ selected_dealer }} (Lakhs)</h2>
+    
+    <div class="table-container">
+        <table>
+            <tr>
+                <th class="month-column">Month</th>
+                {% for year in years %}
+                    {% if year <= 2024 %}
+                        <th class="year-column">{{ year }}</th>
+                        <th class="variation-column">{{ year }} Variation</th>
+                    {% else %}
+                        <th class="predicted-year">{{ year }} Forecast</th>
+                        <th class="predicted-variation">{{ year }} Forecast Variation</th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+    
+            {% for row in forecast_table %}
+                <tr>
+                    <td>{{ row['Month ID'] }}</td>
+                    {% for year in years %}
+                        <td class="year-column">
+                            {{ row[year|string] if (year|string) in row else '-' }}
+                        </td>
+                        <td class="variation-column">
+                            {% set var_key = year|string + ' Variation' %}
+                            {{ row[var_key] if var_key in row else '-' }}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
+
+    <!-- <div>
+        {% if yoy_growth_path %}
+            <h3>Year-over-Year Growth – {{ selected_dealer }}</h3>
+            <img src="{{ yoy_growth_path }}" alt="YoY Growth Chart for {{ selected_dealer }}">
+        {% endif %}
+    </div> -->
+
+    <script>
+        // AJAX request to fetch the trend and seasonality plot for the selected dealer
+        $('#dealer').change(function() {
+            var dealerId = $(this).val(); // Get the selected dealer ID
+
+            $.ajax({
+                url: '/dealer', // Send the request to the /dealer endpoint
+                type: 'GET',
+                data: { dealer: dealerId }, // Send the dealer ID as data
+                success: function(response) {
+                    // Update the plot container with the returned plot image
+                    $('#plot-container').html('<h3>Taxable Amount Trend and Seasonality for ' + dealerId + '</h3>' + 
+                        '<img src="' + response.plot_path + '" alt="Taxable Amount Trend and Seasonality">');
+                },
+                error: function(xhr, status, error) {
+                    alert('Error: ' + error);
+                }
+            });
+        });
+    </script>
+    <!-- Modal -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImg">
+        <div id="caption"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="{{ url_for('static', filename='dealer_script.js') }}"></script>
+</body>
+</html>

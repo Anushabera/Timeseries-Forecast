@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- --------------------- Main Title -------------------------------- -->
+    <title>Sales Forecasting</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+<body>
+
+    <div class="navbar">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="nav-logo" alt="Logo"> <!-- Centered Logo -->
+
+        <div class="nav-left">
+          <a href="{{ url_for('dealer_page') }}" class="nav-link">Dealer</a>
+      </div>
+        <div class="hamburger-container">
+            <div class="hamburger-menu" onclick="toggleMenu()">☰</div>
+            <div class="dropdown-content" id="dropdownMenu">
+                <a href="link_1" target="_blank">webiste_1</a>
+                <a href="link_2" target="_blank">website_2</a>
+                <a href="link_3" target="_blank">website_3</a>
+            </div>
+        </div>
+    </div>
+    
+    <h1 id="sales-forecast">Sales Forecasting</h1>
+
+    <!-- ----------------------------------  User Input -------------------------------------- -->
+    <div class="form-container">
+        <form method="POST">
+            <label for="months">Enter number of months for prediction:</label><br>
+            <input type="number" id="months" name="months" min="1" max="36" required>
+            <br>
+            <button type="submit">Generate Forecast</button>
+        </form>
+    </div>
+
+    <!-- ------------------------------------ Retail Sales ---------------------------------- -->
+    <h2 id="retail-sales">Retail Sales Forecasting</h2>
+
+    <div class="accuracy-box">
+        <h2 id="accuracy">Model Accuracy for Retail (Backtesting on 2024):</h2>
+        <p><b>{{ average_accuracy }}</b></p>
+    </div>
+
+    <div class="dashboard">
+        <!-- Left Side: Large Plot -->
+        <div class="left">
+            <div class="forecast-full">
+                <h2>Actual vs Forecasted Sales of Retail</h2>
+                <img src="{{ url_for('forecast_image') }}" alt="Sales Forecast of Retail" class="forecast-image full-width">
+            </div>
+        </div>
+    
+        <!-- Right Side: Plot 2 on top, Plot 3 & 4 in a row below -->
+        <div class="right">
+            <div class="forecast-item">
+                <h3>Trend & Seasonality of Retail</h3>
+                <img src="{{ url_for('trend_seasonality_image') }}" alt="Trend and Seasonality of Retail Sales">
+            </div>
+            <div class="bottom-row">
+                <div class="forecast-item">
+                    <h3>Growth of Retail Sales</h3>
+                    <img src="{{ url_for('static', filename='yoy_growth.png') }}" alt="Year-Over-Year Growth of Retail Sales">
+                </div>
+                <div class="forecast-item">
+                    <h3>Average Monthly Sales (2018–2024)</h3>
+                    <img src="{{ url_for('static', filename='monthly_avg_sales.png') }}?v={{ time }}" alt="Monthly Average Salesof Retail">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ---------------------------------- Retail Sales Table --------------------------------- -->
+    <h2>Retail Sales Table (Lakhs)</h2>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th class="month-column">Month</th>
+                {% for year in years %}
+                    {% if year <= 2024 %}
+                        <th class="year-column">{{ year }}</th>
+                        <th class="variation-column">{{ year }} Variation</th> 
+                    {% else %}
+                        <th class="predicted-year">{{ year }}</th>
+                        <th class="predicted-variation">{{ year }} Variation</th> 
+                    {% endif %}
+                {% endfor %}
+            </tr>            
+            {% for row in table_data %}
+            <tr>
+                <td>{{ row['Month ID'] }}</td>
+                {% for year in years %}
+                    <td class="year-column">{{ row[year|string] }}</td>
+                    <td class="variation-column">{{ row[year|string + ' Variation'] }}</td> 
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
+    <!-- ----------------------- Quarterly Result ---------------------------------- -->
+    <div class = "card-container">
+        <div class="latest-year-box">
+          <p><strong>{{ latest_year }}</strong></p>
+        </div>
+        <div class="card">
+            <div class="card-title">Q1</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Actual</th>
+                  <th>Predicted</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in data_m %}
+                  <tr>
+                    <td>{{ row['MonthName'] }}</td>
+                    <td>{{ row['Actual'] }}</td>
+                    <td>{{ row['Predicted'] }}</td>
+                  </tr>
+                  <!-- Debugging output to check if loop works -->
+                  <!-- <tr><td colspan="3">{{ row['MonthName'] }} - {{ row['Taxable Amount'] }}</td></tr> -->
+                {% endfor %}
+              </tbody>              
+            </table>
+            <div style="margin-top: 20px; margin-bottom: 20px; font-weight: bold; color: green;">
+              {% if accuracy %}
+                Prediction Accuracy: {{ accuracy }}%
+              {% endif %}
+            </div>
+        </div>        
+        <div class="card">
+            <div class="card-title">Q2</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Actual</th>
+                  <th>Predicted</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Apr</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>May</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>Jun</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <div class="card-title">Q3</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Actual</th>
+                  <th>Predicted</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Jul</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>Aug</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>Sep</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+        <div class="card">
+            <div class="card-title">Q4</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Actual</th>
+                  <th>Predicted</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Oct</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>Nov</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td>Dec</td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>   
+    </div>
+
+    <!-- ------------------------------------- Offtake Sales ----------------------------------- -->
+    <h2 id="Offtake-sales">Offtake Sales Forecasting</h2>
+
+    <div class="accuracy-box">
+        <h2 id="accuracy">Model Accuracy for Offtake (Backtesting on 2024):</h2>
+        <p><b>{{ average_accuracy_1 }}</b></p>
+    </div> 
+
+    <div class="dashboard">
+        <!-- Left Side: Large Plot -->
+        <div class="left">
+            <div class="forecast-full">
+                <h2>Actual vs Forecasted Sales of Offtake</h2>
+                <img src="{{ url_for('forecast_image_1') }}" alt="Sales Forecast of Offtake" class="forecast-image full-width">
+            </div>
+        </div>
+    
+        <!-- Right Side: Plot 2 on top, Plot 3 & 4 in a row below -->
+        <div class="right">
+            <div class="forecast-item">
+                <h3>Trend & Seasonality of Offtake</h3>
+                <img src="{{ url_for('trend_seasonality_image_1') }}" alt="Trend and Seasonality of Offtake">
+            </div>
+            <div class="bottom-row">
+                <div class="forecast-item">
+                    <h3>Growth of Offtake</h3>
+                    <img src="{{ url_for('static', filename='yoy_growth_1.png') }}" alt="Year-Over-Year Growth of Offtake">
+                </div>
+                <div class="forecast-item">
+                    <h3>Average Monthly Sales (2022–2024)</h3>
+                    <img src="{{ url_for('static', filename='monthly_avg_sales_1.png') }}?v={{ time }}" alt="Monthly Average Sales of Offtake">
+                </div>
+            </div>
+        </div>
+    </div>    
+    
+    <!-- -------------------------------------- Offtake Sales Table ------------------------------ -->
+    <h2>Offtake Sales Table</h2>
+    <div class="table-container">
+        <table>
+            <tr>
+                <th class="month-column">Month</th>
+                {% for year in years_1 %}
+                    {% if year <= 2024 %}
+                        <th class="year-column">{{ year }}</th>
+                        <th class="variation-column">{{ year }} Variation</th> 
+                    {% else %}
+                        <th class="predicted-year">{{ year }}</th>
+                        <th class="predicted-variation">{{ year }} Variation</th> 
+                    {% endif %} 
+                {% endfor %}
+            </tr>
+            {% for row in table_data_1 %}
+            <tr>
+                <td>{{ row['Month ID'] }}</td>
+                {% for year in years_1 %}
+                    <td class="year-column">{{ row[year|string] }}</td>
+                    <td class="variation-column">{{ row[year|string + ' Variation'] }}</td> 
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    
+    <button class="refresh" onclick="location.reload()">Refresh Forecast</button>
+
+    <!-- Modal -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImg">
+        <div id="caption"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
