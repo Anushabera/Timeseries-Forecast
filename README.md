@@ -13,7 +13,6 @@ This project provides accurate sales forecasts using state-of-the-art techniques
 - **SARIMAX**
 - **Prophet**
 - **Flask** 
-- **Plotly / Matplotlib**
 
 ## 🚀 Features
 
