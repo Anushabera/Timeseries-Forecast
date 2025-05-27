@@ -17,10 +17,13 @@ This project provides accurate sales forecasts using state-of-the-art techniques
 
 ## 🚀 Features
 
+- User input for entering no. of months and generate forecast
 - Forecast future sales trends with 93% accuracy
 - Support for exogenous variables
 - Interactive web-based interface
 - Dynamic visualization of forecast results
+- Selection option for dealers
+- Personalized forecasting for dealers
 
 ## 📦 Installation
 
